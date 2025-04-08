@@ -13,11 +13,26 @@ Stripe & Payment Processing
 1. Requests and applies a manual 'extended hold' for the max credit amount for 10 days (subject to different card providers and Stripe)
 2. Provides a direct Checkout / Purchase from the Listing Page
 3. Provides a simple 'retry purchase' UI flow feature to encourage conversion if payment fails or user does not complete payment for any reason
+4. Provides 2 options for Client-Side & Server-Side checkout processing via API and Server Actions
+5. Provides Success / Failure feedback to the User based off Stripe
 
 Technical Approach:
-1. The system has been set up to take advantage of the better practice / modern 'app-router' using the 'app' file structure and using tools such as 'Server Actions' to optimise future security / performance rather than the Next JS 'page-router' to reduce tech debt and ease maintenance in the future with up-to-date Next tooling
-2. The system still has the option of running with the legacy 'pages' router for integration / interopability with existing Next JS Codebase - as Next determines which router to use by whether there is an 'app' or 'pages ' directory - this can be enabled by altering the name of the 'app' folder to disable 'app-router' and renaming 'legacy-pages' to 'pages' to re-enable 'pages-router
-3. App Router and maintaining the codebase line in with Next JS v13-15 and onwards is seen as best practice and makes migrating both existing code and developing in the future easier
+1. The system has been set up to take advantage of the better practice / modern 'app-router' using the 'app' file structure and using tools such as 'Server Actions' to optimise future security / performance phasing out the legacy Next JS 'page-router' - on a live system we can reduce tech debt and ease maintenance in the future with up-to-date Next tooling
+2. The system has been tested with the legacy 'page-router' for backwards compatability - Next determines which router to use by whether there is an 'app' or 'pages ' directory - so this can be enabled by altering the name of the 'app' folder to disable 'app-router' and renaming 'legacy-pages' to 'pages' to re-enable 'pages-router
+3. Using App Router and maintaining the codebase line in with Next JS v13-15 and onwards is seen as best practice and makes migrating both existing code and developing in the future easier - for example using modern Next JS this solution supports processing checkouts using Server Actions or can fallback to a REST Checkout API endpoint if any network / cloud issue is detected
+
+### Running Locally
+
+The system is still launched through npm whether running locally or remotely
+
+```bash
+npm install
+# then
+npm run dev
+```
+
+When running locally - .env.local provides test stripe account keys and automatically forwards the system to run on http://localhost:3000
+
 
 
 ### Task Specification
