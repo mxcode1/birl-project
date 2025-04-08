@@ -26,17 +26,37 @@ export default function Home() {
     product.id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handlePurchase = (productId: string) => {
+  const handlePurchase = async (productId: string) => {
     setLoadingId(productId);
-    startTransition(async () => {
+    try {
+      // First, attempt to use Server Action
       const url = await createCheckoutSession(productId);
       if (url) {
         window.location.href = url;
+        return;
+      }
+    } catch (err) {
+      console.warn('Server Action failed, falling back to API:', err);
+    }
+
+    try {
+      // Fallback to API call if Server Action fails
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId }),
+      });
+      const data = await res.json();
+      if (typeof data.url === 'string') {
+        window.location.href = data.url;
       } else {
         alert('Error creating checkout session');
         setLoadingId(null);
       }
-    });
+    } catch (err) {
+      alert('Network error while creating checkout session');
+      setLoadingId(null);
+    }
   };
 
   return (

@@ -1,3 +1,4 @@
+// src/actions/checkout.ts
 'use server';
 
 import Stripe from 'stripe';
@@ -33,5 +34,5 @@ export async function createCheckoutSession(productId: string): Promise<string |
     cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/failure?productId=${product.id}`,
   });
 
-  return session.url ?? null;
+  return session.url ?? null; // ✅ Return session URL instead of redirect()
 }
