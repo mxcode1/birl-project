@@ -30,7 +30,7 @@ export default function ProductCard({ product, loadingId, isPending, onPurchase 
           className="mt-4 w-full bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700 transition"
           disabled={isPending || loadingId === product.id}
         >
-          {loadingId === product.id ? 'Redirecting…' : `Purchase for $${product.max_credit.toFixed(2)}`}
+          {loadingId === product.id ? 'Redirecting…' : `Purchase for £${product.max_credit.toFixed(2)}`}
         </button>
       </div>
     </div>
