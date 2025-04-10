@@ -8,7 +8,7 @@ import useProducts from '@/app/hooks/useProducts';
 import { createCheckoutSession } from '@/app/actions/checkout';
 
 export default function Home() {
-  const {filteredProducts, searchTerm, setSearchTerm } = useProducts();
+  const { filteredProducts, searchTerm, setSearchTerm } = useProducts();
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [isPending] = useTransition();
 
@@ -20,8 +20,12 @@ export default function Home() {
         window.location.href = url;
         return;
       }
-    } catch (err) {
-      console.warn('Server Action failed, falling back to API:', err);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.warn('Server Action failed, falling back to API:', err.message);
+      } else {
+        console.warn('Unknown error during Server Action, falling back to API');
+      }
     }
 
     try {
@@ -37,8 +41,12 @@ export default function Home() {
         alert('Error creating checkout session');
         setLoadingId(null);
       }
-    } catch (err) {
-      alert('Network error while creating checkout session');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert(`Network error: ${err.message}`);
+      } else {
+        alert('Unknown network error while creating checkout session');
+      }
       setLoadingId(null);
     }
   };
