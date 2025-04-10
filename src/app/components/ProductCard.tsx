@@ -23,7 +23,7 @@ export default function ProductCard({ product, loadingId, isPending, onPurchase 
       <div className="mt-auto">
         <p className="text-sm text-gray-500">ID: {product.id}</p>
         <p className="text-md font-medium text-gray-800">
-          Paid: ${product.price_paid.toFixed(2)} | Credit: ${product.max_credit.toFixed(2)}
+          Paid: £{product.price_paid.toFixed(2)} | Credit: £{product.max_credit.toFixed(2)}
         </p>
         <button
           onClick={() => onPurchase(product.id)}
