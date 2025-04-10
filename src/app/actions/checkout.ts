@@ -20,7 +20,7 @@ export async function createCheckoutSession(productId: string): Promise<string |
     line_items: [
       {
         price_data: {
-          currency: 'usd',
+          currency: 'gbp',
           product_data: {
             name: product.title,
             description: product.description,
