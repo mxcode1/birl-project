@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Product } from '@/data/products';
+import Image from 'next/image'
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -58,7 +59,7 @@ export default function Home() {
               key={product.id}
               className="bg-white rounded-2xl shadow hover:shadow-md transition p-4 flex flex-col"
             >
-              <img
+              <Image
                 src={product.image}
                 alt={product.title}
                 className="w-full h-48 object-cover rounded-xl mb-4"

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 
@@ -67,12 +68,12 @@ export default function FailurePage() {
           >
             {isRetrying ? 'Reconnecting...' : 'Retry Purchase'}
           </button>
-          <a
+          <Link
             href="/"
             className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-6 rounded-xl transition"
           >
             Return to Catalog
-          </a>
+          </Link>
         </div>
       </div>
     </div>

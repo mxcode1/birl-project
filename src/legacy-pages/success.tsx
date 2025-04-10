@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function SuccessPage() {
   return (
     <div className="min-h-screen bg-green-50 flex items-center justify-center p-6">
@@ -6,12 +8,12 @@ export default function SuccessPage() {
         <p className="text-gray-700 text-lg mb-6">
           Your hold has been placed successfully. You’ll receive a confirmation if your purchase is captured.
         </p>
-        <a
+        <Link
           href="/"
           className="inline-block bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-xl transition"
         >
           Return to Catalog
-        </a>
+        </Link>
       </div>
     </div>
   );

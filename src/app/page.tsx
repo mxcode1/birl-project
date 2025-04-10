@@ -8,9 +8,9 @@ import useProducts from '@/app/hooks/useProducts';
 import { createCheckoutSession } from '@/app/actions/checkout';
 
 export default function Home() {
-  const { products, filteredProducts, searchTerm, setSearchTerm } = useProducts();
+  const {filteredProducts, searchTerm, setSearchTerm } = useProducts();
   const [loadingId, setLoadingId] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [isPending] = useTransition();
 
   const handlePurchase = async (productId: string) => {
     setLoadingId(productId);

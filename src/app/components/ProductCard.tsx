@@ -1,6 +1,7 @@
 // src/app/components/ProductCard.tsx
 import React from 'react';
 import type { Product } from '@/data/products';
+import Image from 'next/Image'
 
 type Props = {
   product: Product;
@@ -12,7 +13,7 @@ type Props = {
 export default function ProductCard({ product, loadingId, isPending, onPurchase }: Props) {
   return (
     <div className="bg-white rounded-2xl shadow hover:shadow-md transition p-4 flex flex-col">
-      <img
+      <Image
         src={product.image}
         alt={product.title}
         className="w-full h-48 object-cover rounded-xl mb-4"
