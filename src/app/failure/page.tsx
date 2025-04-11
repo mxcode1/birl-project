@@ -1,11 +1,12 @@
+// src/app/failure/page.tsx
 'use client';
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useState, useTransition, Suspense } from 'react';
 import { createCheckoutSession } from '@/app/actions/checkout';
 
-export default function FailurePage() {
+function FailureInner() {
   const searchParams = useSearchParams();
   const [productId, setProductId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -23,13 +24,8 @@ export default function FailurePage() {
 
   const handleRetry = () => {
     if (!productId) return;
-    startTransition(async () => {
-      const url = await createCheckoutSession(productId);
-      if (typeof url === 'string') {
-        window.location.href = url;
-      } else {
-        alert('Error retrying checkout.');
-      }
+    startTransition(() => {
+      createCheckoutSession(productId);
     });
   };
 
@@ -48,14 +44,19 @@ export default function FailurePage() {
           >
             {isPending ? 'Reconnecting...' : 'Retry Purchase'}
           </button>
-          <Link
-            href="/"
-            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-6 rounded-xl transition"
-          >
+          <Link href="/" className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-6 rounded-xl transition">
             Return to Catalog
           </Link>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function FailurePage() {
+  return (
+    <Suspense fallback={<div>Loading failure screen...</div>}>
+      <FailureInner />
+    </Suspense>
   );
 }
