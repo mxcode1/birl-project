@@ -74,3 +74,23 @@ Stripe provides testing cards while in dev mode.
 - [Stripe Testing](https://stripe.com/docs/testing)
 - [Stripe Payments](https://stripe.com/docs/payments)
 - [Stripe Extended Card Holds](https://docs.stripe.com/payments/extended-authorization?platform=web&ui=embedded-form&client=react)
+
+### Original Specificaiton
+
+This task is designed to test your front-end, back-end, and API integration skills with a real world scenario. 
+
+We'd like you to create a simple Next.js app where the user can enter a product ID to fetch and display product details or an error message if appropriate. You can style the app as you see fit.
+
+Please use the Next.js API to implement the product retrieval functionality. Instead of a database, we have provided static product data in `src/data/products.ts`, along with mock database calls `getProduct` and `getProductsIn`.
+
+Next, the user should be taken to a payment screen where they can enter payment details using Stripe. The payment should place an **extended hold** on the card for the amount of `max_credit` for 10 days. For more details, see the documentation below. We recommend using the `Embedded Form` or `Advanced Integration`.
+
+You shouldn't spend more than 3 hours on this project. We are interested in depth of knowledge and code quality, if you are unable to finish the tasks please write a short note stating where you got up to and how you would have approached the next steps.
+
+You can start editing the page by modifying `pages/index.tsx`.
+
+And build the api route for fetching products in `pages/api/products`
+
+The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+
+
