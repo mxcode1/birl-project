@@ -16,8 +16,6 @@ export async function createCheckoutSession(productId: string): Promise<string |
     mode: 'payment',
     payment_intent_data: {
       capture_method: 'manual',
-      setup_future_usage: 'off_session',
-      description: `Extended hold for ${product.title} - ${product.id}`,
     },
     line_items: [
       {
