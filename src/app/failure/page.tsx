@@ -22,10 +22,49 @@ function FailureInner() {
     }
   }, [searchParams]);
 
-  const handleRetry = () => {
+  const handleRetry = async () => {
     if (!productId) return;
-    startTransition(() => {
-      createCheckoutSession(productId);
+  
+    startTransition(async () => {
+      try {
+        const url = await createCheckoutSession(productId);
+        if (url) {
+          console.log('[Checkout] Success via Server Action');
+          window.location.href = url;
+          return;
+        } else {
+          console.warn('[Checkout] Server Action returned null');
+        }
+      } catch (err: unknown) {
+        console.warn('[Checkout] Server Action failed:', err);
+      }
+  
+      try {
+        const res = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId }),
+        });
+  
+        if (!res.ok) {
+          const errRes = await res.json().catch(() => ({}));
+          console.error('[Checkout] API error:', errRes);
+          alert(errRes.error ?? 'Unknown API error');
+          return;
+        }
+  
+        const data = await res.json();
+        if (typeof data.url === 'string') {
+          console.log('[Checkout] Success via API fallback');
+          window.location.href = data.url;
+        } else {
+          console.error('[Checkout] Invalid API response:', data);
+          alert('Error creating fallback checkout session.');
+        }
+      } catch (err: unknown) {
+        console.error('[Checkout] Network error during API fallback:', err);
+        alert('Network error during fallback checkout');
+      }
     });
   };
 
