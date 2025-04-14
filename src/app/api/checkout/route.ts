@@ -20,6 +20,8 @@ export async function POST(req: NextRequest) {
     mode: 'payment',
     payment_intent_data: {
       capture_method: 'manual',
+      setup_future_usage: 'off_session',
+      description: `Extended hold for ${product.title} - ${product.id}`,
     },
     line_items: [
       {
@@ -31,9 +33,15 @@ export async function POST(req: NextRequest) {
           },
           unit_amount: Math.round(product.max_credit * 100),
         },
+        
         quantity: 1,
       },
     ],
+    payment_method_options: {
+          card:{
+            request_extended_authorization: 'if_available',
+          },
+        },
     success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success`,
     cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/failure?productId=${product.id}`,
   });
