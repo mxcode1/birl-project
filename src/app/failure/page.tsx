@@ -1,4 +1,3 @@
-// src/app/failure/page.tsx
 'use client';
 
 import Link from 'next/link';
@@ -14,48 +13,55 @@ function FailureInner() {
   useEffect(() => {
     const idFromUrl = searchParams.get('productId');
     if (idFromUrl) {
+      console.log('[FailurePage] productId from URL:', idFromUrl);
       setProductId(idFromUrl);
       localStorage.setItem('lastProductId', idFromUrl);
     } else {
       const fallback = localStorage.getItem('lastProductId');
+      console.log('[FailurePage] productId from localStorage:', fallback);
       if (fallback) setProductId(fallback);
     }
   }, [searchParams]);
 
   const handleRetry = async () => {
-    if (!productId) return;
-  
+    if (!productId) {
+      console.warn('[Checkout] Retry blocked: No productId');
+      return;
+    }
+
+    console.log('[Checkout] Retry initiated for:', productId);
+
     startTransition(async () => {
       try {
         const url = await createCheckoutSession(productId);
         if (url) {
-          console.log('[Checkout] Success via Server Action');
+          console.log('[Checkout] Success via Server Action. Redirecting to:', url);
           window.location.href = url;
           return;
         } else {
-          console.warn('[Checkout] Server Action returned null');
+          console.warn('[Checkout] Server Action returned null URL');
         }
       } catch (err: unknown) {
         console.warn('[Checkout] Server Action failed:', err);
       }
-  
+
       try {
         const res = await fetch('/api/checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ productId }),
         });
-  
+
         if (!res.ok) {
           const errRes = await res.json().catch(() => ({}));
           console.error('[Checkout] API error:', errRes);
           alert(errRes.error ?? 'Unknown API error');
           return;
         }
-  
+
         const data = await res.json();
         if (typeof data.url === 'string') {
-          console.log('[Checkout] Success via API fallback');
+          console.log('[Checkout] Success via API fallback. Redirecting to:', data.url);
           window.location.href = data.url;
         } else {
           console.error('[Checkout] Invalid API response:', data);
