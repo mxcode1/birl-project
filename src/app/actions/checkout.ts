@@ -12,10 +12,20 @@ export async function createCheckoutSession(productId: string): Promise<string |
   const product = getProduct(productId);
   if (!product) return null;
 
-  const session = await stripe.checkout.sessions.create({
+const session = await stripe.checkout.sessions.create({
     mode: 'payment',
     payment_intent_data: {
       capture_method: 'manual',
+      description: `Extended hold for ${product.title} - ${product.id}`,
+      metadata: {
+        product_id: product.id,
+        product_title: product.title,
+      },
+    },
+    payment_method_options: {
+      card: {
+        request_extended_authorization: 'if_available',
+      },
     },
     line_items: [
       {
