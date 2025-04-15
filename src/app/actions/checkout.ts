@@ -8,6 +8,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
   apiVersion: '2025-03-31.basil',
 });
 
+const extendedAuthSupported = process.env.EXTENDED_AUTH_ENABLED === 'true';
+
 export async function createCheckoutSession(productId: string): Promise<string | null> {
   const product = getProduct(productId);
   if (!product) return null;
@@ -16,12 +18,19 @@ const session = await stripe.checkout.sessions.create({
     mode: 'payment',
     payment_intent_data: {
       capture_method: 'manual',
-    },
-    payment_method_options: {
-      card: {
-        request_extended_authorization: 'if_available',
+      description: `Extended hold for ${product.title} - ${product.id}`,
+      metadata: {
+        product_id: product.id,
+        product_title: product.title,
       },
     },
+    ...(extendedAuthSupported && {
+      payment_method_options: {
+          card:{
+            request_extended_authorization: 'if_available',
+          },
+        },
+      }),
     line_items: [
       {
         price_data: {

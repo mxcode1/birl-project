@@ -7,6 +7,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
   apiVersion: '2025-03-31.basil',
 });
 
+const extendedAuthSupported = process.env.EXTENDED_AUTH_ENABLED === 'true';
+
 export async function POST(req: NextRequest) {
   try {
     const { productId } = await req.json();
@@ -24,15 +26,6 @@ export async function POST(req: NextRequest) {
     console.log(`[API Checkout] Creating Stripe session for: ${product.title} (${product.id})`);
 
     const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
-      payment_intent_data: {
-        capture_method: 'manual',
-      },
-      payment_method_options: {
-        card: {
-          request_extended_authorization: 'if_available',
-        },
-      },
       line_items: [
         {
           price_data: {
@@ -43,13 +36,31 @@ export async function POST(req: NextRequest) {
             },
             unit_amount: Math.round(product.max_credit * 100),
           },
+          
           quantity: 1,
         },
       ],
+      mode: 'payment',
+      payment_intent_data: {
+        capture_method: 'manual',
+        description: `Extended hold for ${product.title} - ${product.id}`,
+        metadata: {
+          product_id: product.id,
+          product_title: product.title,
+        },
+      },
+      // Use extended authorization if supported (Requires Account Approval From Stripe)
+      ...(extendedAuthSupported && {
+        payment_method_options: {
+            card:{
+              request_extended_authorization: 'if_available',
+            },
+          },
+        }),
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/failure?productId=${product.id}`,
     });
-
+    
     console.log('[API Checkout] Stripe session created:', session.id);
     return NextResponse.json({ url: session.url });
   } catch (err: unknown) {
