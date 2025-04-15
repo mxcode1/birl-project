@@ -16,11 +16,6 @@ const session = await stripe.checkout.sessions.create({
     mode: 'payment',
     payment_intent_data: {
       capture_method: 'manual',
-      description: `Extended hold for ${product.title} - ${product.id}`,
-      metadata: {
-        product_id: product.id,
-        product_title: product.title,
-      },
     },
     payment_method_options: {
       card: {
