@@ -11,18 +11,22 @@ const extendedAuthSupported = process.env.EXTENDED_AUTH_ENABLED === 'true';
 
 export async function POST(req: NextRequest) {
   try {
+    console.log("Nonsense 1")
     const { productId } = await req.json();
     if (!productId) {
       console.warn('[API Checkout] Missing productId in request body');
       return NextResponse.json({ error: 'Missing productId' }, { status: 400 });
     }
 
+    console.log("Nonsense 1.5")
     const product = getProduct(productId);
+    console.log("Nonsense 2")
+
     if (!product) {
       console.warn(`[API Checkout] Invalid product ID: ${productId}`);
       return NextResponse.json({ error: 'Invalid product ID' }, { status: 400 });
     }
-
+    console.log("Nonsense 3")
     console.log(`[API Checkout] Creating Stripe session for: ${product.title} (${product.id})`);
 
     const session = await stripe.checkout.sessions.create({
